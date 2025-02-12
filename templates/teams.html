@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .team-header {
+            background-color: #f2f2f2;
+        }
+        .user-row {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ol class="breadcrumb">
+            
+               <a href="/"><h1> to Home</h1></a> 
+           
+        </ol>
+    </nav>
+    <h1>Teams</h1>
+    <a href="{{ url_for('main.add_team') }}">Add a New Team</a>
+    <br><br>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+                <tr class="team-header">
+                    <td>{{ team.id }}</td>
+                    <td>{{ team.name }}</td>
+                    <td>{{ team.description }}</td>
+                    <td>
+                        <a href="{{ url_for('main.list_team_users', team_id=team.id) }}">View Users</a>
+                        <form action="{{ url_for('main.delete_team', id=team.id) }}" method="POST" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% if team.users %}
+                    <tr>
+                        <td colspan="4">
+                            <strong>Users in this team:</strong>
+                            <ul>
+                                {% for user in team.users %}
+                                    <li>{{ user.username }} ({{ user.email }})</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="4">No teams found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
